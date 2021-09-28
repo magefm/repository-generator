@@ -8,19 +8,27 @@ cd "sources/magento2"
 
 path=$1
 name=$2
-tag=$3
-version=$(cat "$path/composer.json" | jq -r '.version')
+reftype=$3
+ref=$4
 
-if [[ "null" == "$version" ]]; then
-    version="$tag"
+if [[ "$reftype" == "branch" ]]; then
+    reftype="heads"
+    version=$(git rev-parse --abbrev-ref HEAD)
+else
+    reftype="tags"
+    version=$(cat "$path/composer.json" | jq -r '.version')
+
+    if [[ "null" == "$version" ]]; then
+        version="$ref"
+    fi
 fi
 
-echo "Splitting $path ($tag) into $name ($version)"
+echo "Splitting $path (refs/$reftype/$ref) into $name (refs/$reftype/$version)"
 
 "${OLDPWD}/splitsh-lite/splitsh-lite" \
     -prefix "$path/" \
-    -origin "refs/tags/$tag" \
-    -target "refs/tags/split-$name-$version" \
+    -origin "refs/$reftype/$ref" \
+    -target "refs/$reftype/split-$name-$reftype-$version" \
     -progress
 
 if [[ ! -d "$prefix/$name" ]]; then

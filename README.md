@@ -7,7 +7,7 @@ Tooling to build a composer repository based on a magento2 git repository.
 ## Usage
 
 1. Clone this repository;
-2. Run `make packages/magento2/`;
+2. Run `make packages/magento2/ reftype=tag ref=2.4.0`;
 3. Run `make repository`;
 4. Run `php -S 0.0.0.0:8080 -t repository/`;
 5. Browse at http://localhost:8080;

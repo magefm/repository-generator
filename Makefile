@@ -1,4 +1,5 @@
-VERSION := 2.4.0
+reftype := "branch"
+ref := "2.4"
 
 clean:
 	@rm -rf satis.json
@@ -7,7 +8,7 @@ clean:
 .PHONY: packages/magento2/
 packages/magento2/: splitsh-lite/splitsh-lite sources/magento2/
 	@mkdir -p packages/magento2/
-	@bash scripts/split-magento2.sh "$(VERSION)"
+	@bash scripts/split-magento2.sh "$(reftype)" "$(ref)"
 
 repository: repository/
 

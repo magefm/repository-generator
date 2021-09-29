@@ -15,6 +15,7 @@ class SatisJsonGenerator
     public function generate(): void
     {
         $this->collectMagento2Packages();
+        $this->collectSecurityPackages();
 
         $template = [
             'name' => 'magefm/repository',
@@ -34,6 +35,19 @@ class SatisJsonGenerator
     private function collectMagento2Packages(): void
     {
         $folders = glob('packages/magento2/*/*');
+
+        foreach ($folders as $folder) {
+            $this->require[$this->extractComposerNameFromPath($folder)] = '*';
+            $this->repositories[] = [
+                'type' => 'vcs',
+                'url' => sprintf('%s/%s', getcwd(), $folder),
+            ];
+        }
+    }
+
+    private function collectSecurityPackages(): void
+    {
+        $folders = glob('packages/security-package/*/*');
 
         foreach ($folders as $folder) {
             $this->require[$this->extractComposerNameFromPath($folder)] = '*';

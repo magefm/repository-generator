@@ -10,6 +10,11 @@ packages/magento2/: splitsh-lite/splitsh-lite sources/magento2/
 	@mkdir -p packages/magento2/
 	@bash scripts/split-magento2.sh "$(reftype)" "$(ref)"
 
+.PHONY: packages/security-package/
+packages/security-package/: splitsh-lite/splitsh-lite sources/security-package/
+	@mkdir -p packages/security-package/
+	@bash scripts/split-security.sh "$(reftype)" "$(ref)"
+
 repository: repository/
 
 repository/: satis.json
@@ -25,6 +30,10 @@ satis.json: satis/
 sources/magento2/:
 	@mkdir -p sources/
 	@git clone https://github.com/magento/magento2.git sources/magento2
+
+sources/security-package/:
+	@mkdir -p sources/
+	@git clone https://github.com/magento/security-package.git sources/security-package
 
 splitsh-lite/:
 	@git clone https://github.com/magefm/splitsh-lite.git

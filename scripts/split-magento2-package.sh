@@ -25,10 +25,17 @@ fi
 
 echo "Splitting $path (refs/$reftype/$ref) into $name (refs/$reftype/$version)"
 
+localRef="split-$name-$reftype-$version"
+
+if [[ "$reftype" == "tags" && "$(git tag | grep "$localRef" | wc -l)" -eq "1" ]]; then
+    echo "Skipping, tag already exists"
+    exit 0
+fi
+
 "${OLDPWD}/splitsh-lite/splitsh-lite" \
     -prefix "$path/" \
     -origin "refs/$reftype/$ref" \
-    -target "refs/$reftype/split-$name-$reftype-$version" \
+    -target "refs/$reftype/$localRef" \
     -progress
 
 if [[ ! -d "$prefix/$name" ]]; then
@@ -36,4 +43,4 @@ if [[ ! -d "$prefix/$name" ]]; then
     (cd "$prefix/$name"; git init .)
 fi
 
-git push -f "$prefix/$name" "split-$name-$version":"$version"
+git push -f "$prefix/$name" "$localRef":"$version"

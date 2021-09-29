@@ -5,6 +5,8 @@ if (empty($_SERVER['argv'][1])) {
     exit(1);
 }
 
+$config = json_decode(file_get_contents('config.json'));
+
 $prefix = $_SERVER['argv'][1];
 
 $directory = new RecursiveDirectoryIterator($prefix);
@@ -44,7 +46,20 @@ foreach ($regex as $dir) {
     $packages[] = [
         'name' => $json['name'],
         'path' => dirname($pathNormalized),
+        'repository' => getRepository($json['name']),
     ];
 }
 
 echo json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+
+function getRepository(string $name): string {
+    global $config;
+
+    $parts = explode('/', $name);
+
+    if (empty($parts[1])) {
+        throw new \Exception(sprintf('cannot determine repository for %s', $name));
+    }
+
+    return sprintf($config->githubRemoteTemplate, $parts[1]);
+}

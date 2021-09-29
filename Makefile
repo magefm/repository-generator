@@ -5,6 +5,9 @@ clean:
 	@rm -rf satis.json
 	@rm -rf repository
 
+.PHONY: packages/
+packages/: packages/magento2/ packages/security-package/
+
 .PHONY: packages/magento2/
 packages/magento2/: splitsh-lite/splitsh-lite sources/magento2/
 	@mkdir -p packages/magento2/

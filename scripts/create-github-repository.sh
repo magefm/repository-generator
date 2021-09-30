@@ -16,7 +16,7 @@ for PACKAGEJSON in $(echo "$PACKAGESJSON" | jq -c '.[]'); do
 
     echo "Creating ${GHORG}/${NAME}"
 
-    RESULT=$(curl -sS \
+    RESULT=$(curl --fail -sS \
         -u "${GHUSER}:${GHTOKEN}" \
         -X POST \
         -H "Accept: application/vnd.github.v3+json" \

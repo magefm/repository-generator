@@ -43,3 +43,19 @@ splitsh-lite/:
 
 splitsh-lite/splitsh-lite: splitsh-lite/
 	@(cd splitsh-lite; make build)
+
+# splitsh-cache
+sources/magento2/.git/splitsh.db: splitsh-cache/
+	@cp splitsh-cache/magento2.db sources/magento2/.git/splitsh.db
+
+sources/security-package/.git/splitsh.db: splitsh-cache/
+	@cp splitsh-cache/security-package.db sources/security-package/.git/splitsh.db
+
+splitsh-cache/:
+	@git clone https://github.com/magefm/splitsh-cache.git
+
+splitsh-cache/magento2.db:
+	@cp sources/magento2/.git/splitsh.db splitsh-cache/magento2.db
+
+splitsh-cache/security-package.db:
+	@cp sources/security-package/.git/splitsh.db splitsh-cache/security-package.db

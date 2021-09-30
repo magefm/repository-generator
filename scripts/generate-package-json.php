@@ -51,6 +51,10 @@ foreach ($regex as $dir) {
     ];
 }
 
+usort($packages, function(array $a, array $b) {
+    return $a['name'] > $b['name'];
+});
+
 echo json_encode($packages, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
 
 function getRepository(string $name): string {

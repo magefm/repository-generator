@@ -8,6 +8,7 @@ if (empty($_SERVER['argv'][1])) {
 $config = json_decode(file_get_contents('config.json'));
 
 $prefix = $_SERVER['argv'][1];
+$prefix = rtrim($prefix, '/');
 
 $directory = new RecursiveDirectoryIterator($prefix);
 $iterator = new RecursiveIteratorIterator($directory);

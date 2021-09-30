@@ -14,5 +14,5 @@ Tooling to build a composer repository based on a magento2 git repository.
 
 ## Dependencies
 
-1. In your PATH: `bash`, `composer`, `git`, `jq`, `php`;
+1. In your PATH: `bash`, `composer`, `cut`, `git`, `jq`, `php`;
 2. `docker` for building the `splitsh-lite` binary;

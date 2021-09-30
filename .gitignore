@@ -2,6 +2,7 @@
 /packages/
 /repository/
 /satis/
+/satis-composer-home/
 /satis.json
 /sources/
 /splitsh-cache/

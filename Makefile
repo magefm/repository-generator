@@ -21,7 +21,7 @@ packages/security-package/: splitsh-lite/splitsh-lite sources/security-package/
 repository: repository/
 
 repository/: satis.json
-	@php satis/bin/satis build satis.json
+	@COMPOSER_HOME=$(PWD)/satis-composer-home/ php satis/bin/satis build satis.json
 
 satis/:
 	@composer create-project composer/satis:dev-main satis/

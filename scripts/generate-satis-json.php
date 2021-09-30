@@ -26,6 +26,8 @@ class SatisJsonGenerator
                 'rearchive' => true,
                 'skip-dev' => true,
             ],
+            'minimum-stability' => 'stable',
+            'require-dependencies' => false,
             'require-dev-dependencies' => false,
             'require' => $this->require,
             'repositories' => $this->repositories,

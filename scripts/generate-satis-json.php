@@ -14,6 +14,7 @@ class SatisJsonGenerator
 
     public function generate(): void
     {
+        $this->collectInventoryPackages();
         $this->collectMagento2Packages();
         $this->collectSecurityPackages();
 
@@ -34,6 +35,25 @@ class SatisJsonGenerator
         ];
         
         echo json_encode($template, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function collectInventoryPackages(): void
+    {
+        $folders = glob('packages/inventory/*/*');
+
+        foreach ($folders as $folder) {
+            $name = $this->extractComposerNameFromPath($folder);
+
+            if ($name === 'magento/inventory-composer-metapackage-dev') {
+                continue;
+            }
+
+            $this->require[$name] = '*';
+            $this->repositories[] = [
+                'type' => 'vcs',
+                'url' => sprintf('%s/%s', getcwd(), $folder),
+            ];
+        }
     }
 
     private function collectMagento2Packages(): void

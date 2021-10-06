@@ -2,27 +2,35 @@
 
 set -e -o pipefail
 
-source="$1"
+CONFIGJSON="$(cat config.json)"
+GHREMOTETEMPLATE=$(echo "$CONFIGJSON" | jq -r '.githubRemoteTemplate')
 
-PACKAGESJSON=$(php scripts/generate-package-json.php "$source")
+source="$1"
 
 cd "$source"
 
-for PACKAGEJSON in $(echo "$PACKAGESJSON" | jq -c '.[]'); do
-    NAME=$(echo "$PACKAGEJSON" | jq -r '.name')
-    REPOSITORY=$(echo "$PACKAGEJSON" | jq -r '."repository"')
+BRANCHES=()
+eval "$(git for-each-ref --shell --format='BRANCHES+=(%(refname))' refs/heads/ | grep "refs/heads/split-magento/")"
 
-    echo "Pushing $NAME to $REPOSITORY"
+for BRANCH in "${BRANCHES[@]}"; do
+    NAME=${BRANCH//refs\/heads\/split-magento\/}
+    VERSION=${NAME//*-heads-}
+    NAME=${NAME//-heads-*}
 
-    branches=()
-    eval "$(git for-each-ref --shell --format='branches+=(%(refname))' refs/heads/ | grep "refs/heads/split-$NAME-heads-")"
-    for branch in "${branches[@]}"; do
-        git push "$REPOSITORY" "$branch":"${branch#"refs/heads/split-$NAME-heads-"}"
-    done
+    REPOSITORY=$(printf "$GHREMOTETEMPLATE" "$NAME")
+    echo "Pushing $BRANCH to $REPOSITORY ($VERSION)"
+    git push "$REPOSITORY" "$BRANCH":"$VERSION"
+done
 
-    tags=()
-    eval "$(git for-each-ref --shell --format='tags+=(%(refname))' refs/tags/ | grep "refs/tags/split-$NAME-tags-")"
-    for tag in "${tags[@]}"; do
-        git push "$REPOSITORY" "$tag":"${tag#"refs/tags/split-$NAME-tags-"}"
-    done
+TAGS=()
+eval "$(git for-each-ref --shell --format='TAGS+=(%(refname))' refs/tags/ | grep "refs/tags/split-magento/")"
+
+for TAG in "${TAGS[@]}"; do
+    NAME=${TAG//refs\/tags\/split-magento\/}
+    VERSION=${NAME//*-tags-}
+    NAME=${NAME//-tags-*}
+
+    REPOSITORY=$(printf "$GHREMOTETEMPLATE" "$NAME")
+    echo "Pushing $TAG to $REPOSITORY ($VERSION)"
+    git push "$REPOSITORY" "$TAG":"$VERSION"
 done

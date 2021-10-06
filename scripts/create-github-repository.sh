@@ -7,13 +7,11 @@ GHUSER=$(echo "$GHTOKENJSON" | jq -r '.user')
 GHTOKEN=$(echo "$GHTOKENJSON" | jq -r '.token')
 GHORG=$(echo "$GHTOKENJSON" | jq -r '.organization')
 
-source="$1"
-PACKAGESJSON=$(php scripts/generate-package-json.php "$source")
+source="$1" # i.e.: "packages/inventory/"
+PACKAGES=($(find "$source/magento" -mindepth 1 -maxdepth 1 -type d))
 
-for PACKAGEJSON in $(echo "$PACKAGESJSON" | jq -c '.[]'); do
-    NAME=$(echo "$PACKAGEJSON" | jq -r '.name')
-    NAME="${NAME#magento/}"
-
+for PACKAGE in "${PACKAGES[@]}"; do
+    NAME="${PACKAGE##*/}"
     echo "Creating ${GHORG}/${NAME}"
 
     RESULT=$(curl --fail -sS \

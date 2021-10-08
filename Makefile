@@ -5,6 +5,7 @@ clean:
 	@rm -rf satis.json
 	@rm -rf repository
 
+# packages
 .PHONY: packages/
 packages/: packages/inventory/ packages/magento2/ packages/security-package/
 
@@ -23,6 +24,7 @@ packages/security-package/: splitsh-lite/splitsh-lite sources/security-package/
 	@mkdir -p packages/security-package/
 	@bash scripts/split-security.sh "$(reftype)" "$(ref)"
 
+# repository
 repository: repository/
 
 repository/: satis.json
@@ -35,6 +37,7 @@ satis.json: satis/
 	@echo Generating satis.json
 	@php scripts/generate-satis-json.php > satis.json
 
+# sources
 sources/:
 	@mkdir -p sources/
 
@@ -47,6 +50,7 @@ sources/magento2/: sources/
 sources/security-package/: sources/
 	@git clone https://github.com/magento/security-package.git sources/security-package
 
+# splitsh-lite
 splitsh-lite/:
 	@git clone https://github.com/magefm/splitsh-lite.git
 

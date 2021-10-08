@@ -54,17 +54,23 @@ splitsh-lite/splitsh-lite: splitsh-lite/
 	@(cd splitsh-lite; make build)
 
 # splitsh-cache
-sources/magento2/.git/splitsh.db: splitsh-cache/
+sources/inventory/.git/splitsh.db: splitsh-cache/inventory.db
+	@cp splitsh-cache/inventory.db sources/inventory/.git/splitsh.db
+
+sources/magento2/.git/splitsh.db: splitsh-cache/magento2.db
 	@cp splitsh-cache/magento2.db sources/magento2/.git/splitsh.db
 
-sources/security-package/.git/splitsh.db: splitsh-cache/
+sources/security-package/.git/splitsh.db: splitsh-cache/security-package.db
 	@cp splitsh-cache/security-package.db sources/security-package/.git/splitsh.db
 
 splitsh-cache/:
-	@git clone https://github.com/magefm/splitsh-cache.git
+	@mkdir splitsh-cache/
 
-splitsh-cache/magento2.db:
-	@cp sources/magento2/.git/splitsh.db splitsh-cache/magento2.db
+splitsh-cache/inventory.db: splitsh-cache/
+	@curl https://magefm-splitsh-cache.kassner.com.br/inventory.db.gz | gzip -d > splitsh-cache/inventory.db
 
-splitsh-cache/security-package.db:
-	@cp sources/security-package/.git/splitsh.db splitsh-cache/security-package.db
+splitsh-cache/magento2.db: splitsh-cache/
+	@curl https://magefm-splitsh-cache.kassner.com.br/magento2.db.gz | gzip -d > splitsh-cache/magento2.db
+
+splitsh-cache/security-package.db: splitsh-cache/
+	@curl https://magefm-splitsh-cache.kassner.com.br/security-package.db.gz | gzip -d > splitsh-cache/security-package.db
